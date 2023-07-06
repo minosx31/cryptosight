@@ -1,6 +1,4 @@
-import axios from "axios";
-import { useEffect, useState } from "react"
-import { HistoricalChart } from "../config/api";
+import { useState } from "react"
 import { CryptoState } from "../CryptoContext";
 import { CircularProgress, LinearProgress, ThemeProvider, createTheme } from "@mui/material";
 import { makeStyles } from "tss-react/mui";
@@ -9,22 +7,15 @@ import { CategoryScale, Chart, Filler, Legend, LineElement, LinearScale, PointEl
 import { useParams } from "react-router-dom";
 import { chartDays } from "../config/data";
 import SelectButtons from "./SelectButtons";
+import { useGetHistoricalChartQuery } from "../api/CryptoApi";
 
-const CoinInfo = ({ coin }) => {
+const CoinInfo = () => {
   const { id } = useParams();
-  const [historicalData, setHistoricalData] = useState();
   const [days, setDays] = useState(1);
   const { currency } = CryptoState();
 
-  const fetchHistoricalData = async () => {
-    const { data } = await axios.get(HistoricalChart(id, days, currency), {withCredentials:false});
-    setHistoricalData(data.prices)
-  }
-
-  useEffect(() => {
-    fetchHistoricalData();
-    // eslint-disable-next-line
-  } , [currency, days])
+  console.log(currency)
+  const { data: historicalChart, isFetching } = useGetHistoricalChartQuery(id, currency, days)
 
   const darkTheme = createTheme({
     palette: {
@@ -54,8 +45,6 @@ const useStyles = makeStyles()((theme)=> {
 
 const { classes } = useStyles();
 
-console.log(historicalData)
-
 Chart.register(
   CategoryScale,
   LinearScale,
@@ -67,19 +56,18 @@ Chart.register(
   Legend
 )
 
-if (!coin) return <LinearProgress style={{backgroundColor: "gold"}} />
+  if (isFetching) return <LinearProgress style={{backgroundColor: "gold"}} />
 
   return (
     <ThemeProvider theme={darkTheme}>
       <div className={classes.container}>
         {
-          !historicalData ? (
+          !historicalChart ? (
             <CircularProgress style={{ color: "gold" }} size={250} thickness={1} />
           ) : (
           <>
-          
             <Line data={{
-              labels: historicalData.map((coin) => {
+              labels: historicalChart.prices.map((coin) => {
                 let date = new Date(coin[0]);
                 let time = 
                 date.getHours() > 12 
@@ -90,7 +78,7 @@ if (!coin) return <LinearProgress style={{backgroundColor: "gold"}} />
               }),
 
               datasets: [{
-                data:historicalData.map((coin) => coin[1]),
+                data:historicalChart.prices.map((coin) => coin[1]),
                 label: `Price ( Past ${days} Days ) in ${currency}`,
                 borderColor: "teal"
               }],
@@ -117,7 +105,6 @@ if (!coin) return <LinearProgress style={{backgroundColor: "gold"}} />
               ))}
             </div>
           </>
-          
         )}
       </div>
     </ThemeProvider>

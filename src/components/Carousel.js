@@ -1,10 +1,9 @@
-import axios from "axios";
-import { MarketCap } from "../config/api"
 import { CryptoState } from "../CryptoContext";
-import { useEffect, useState } from "react";
 import { makeStyles } from "tss-react/mui";
 import AliceCarousel from "react-alice-carousel";
 import { Link } from "react-router-dom";
+import { useGetMarketCapQuery } from "../api/CryptoApi";
+import { LinearProgress } from "@mui/material";
 
 // https://stackoverflow.com/questions/2901102/how-to-format-a-number-with-commas-as-thousands-separators
 export function numberWithCommas(x) {
@@ -12,7 +11,6 @@ export function numberWithCommas(x) {
 }
 
 const Carousel = () => {
-    const [trending, setTrending] = useState([])
     const useStyles = makeStyles()( () => {
         return {
             carousel: {
@@ -44,17 +42,11 @@ const Carousel = () => {
         }
     };
 
-    const fetchData = async () => {
-        const { data } = await axios.get(MarketCap(currency), {withCredentials:false});
-        setTrending(data);
-    }
+    const { data: marketCap, isFetching } = useGetMarketCapQuery(currency)
 
-    useEffect(() => {
-        fetchData();
-        // eslint-disable-next-line
-    }, [currency]);
+    if (isFetching) return <LinearProgress style={{backgroundColor: "gold"}} />
 
-    const items = trending.map((coin) => {
+    const items = marketCap.map((coin) => {
         let profit = coin.price_change_percentage_24h >= 0;
         return (
             <Link 

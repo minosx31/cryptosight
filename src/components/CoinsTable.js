@@ -1,11 +1,10 @@
-import axios from "axios";
-import { useEffect, useState } from "react"
-import { CoinList } from "../config/api";
+import { useState } from "react"
 import { CryptoState } from "../CryptoContext";
 import { CircularProgress, Container, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { numberWithCommas } from "./Carousel";
 import { makeStyles } from "tss-react/mui";
+import { useGetCoinListQuery } from "../api/CryptoApi";
 
 const CoinsTable = () => {
 
@@ -41,30 +40,15 @@ const CoinsTable = () => {
         }
     });
 
-    const [coins, setCoins] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
     const { currency, symbol } = CryptoState();
     const [page, setPage] = useState(1)
     const history = useNavigate();
 
-    const fetchCoins = async () => {
-        setLoading(true)
-        const {data} = await axios.get(CoinList(currency), {withCredentials:false});
-
-        setCoins(data);
-        setLoading(false);
-    };
-
-    console.log(coins);
-
-    useEffect(() => {
-        fetchCoins()
-        // eslint-disable-next-line
-    }, [currency]);
+    const { data: coins, isFetching } = useGetCoinListQuery(currency)
 
     const handleSearch = () => {
-        return coins.filter((coin) => {
+        return coins?.filter((coin) => {
             return coin.name.toLowerCase().includes(search) || coin.symbol.toLowerCase().includes(search);
         })
     }
@@ -84,7 +68,7 @@ const CoinsTable = () => {
 
                     <TableContainer>
                         {
-                            loading ? (<CircularProgress />) 
+                            isFetching ? (<CircularProgress />) 
                             : (
                             <Table>
                                 <TableHead style={{backgroundColor: "grey"}}>
@@ -170,10 +154,8 @@ const CoinsTable = () => {
                         window.scroll( {top: 0, left: 0, behavior: "smooth"})
                     }}
                     />
-            
         </Container>
     </ThemeProvider>
-    
   )
 }
 export default CoinsTable

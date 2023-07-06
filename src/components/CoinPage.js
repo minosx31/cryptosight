@@ -1,31 +1,18 @@
 import { useParams } from "react-router-dom"
 import { CryptoState } from "../CryptoContext";
-import { SingleCoin } from "../config/api";
 import { LinearProgress, Typography} from "@mui/material";
 import CoinInfo from "./CoinInfo";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import { makeStyles } from "tss-react/mui";
 import { numberWithCommas } from "./Carousel";
+import { useGetSingleCoinQuery } from "../api/CryptoApi";
 
 const CoinPage = () => {
   const { id } = useParams();
-  const [coin, setCoin] = useState();
-
   const { currency, symbol } = CryptoState();
+  const {data: coin, isFetching} = useGetSingleCoinQuery(id)
 
-  const fetchCoin = async () => {
-    const data = await axios.get(SingleCoin(id), {withCredentials:false});
-    setCoin(data)
-  };
-
-  useEffect(() => {
-    fetchCoin();
-    // eslint-disable-next-line
-  }, [])
-
-  console.log(coin)
-
+  console.log('coin', coin)
+  console.log('currency in coinpage', currency)
   const useStyles = makeStyles()((theme) => {
     return {
       container: {
@@ -78,41 +65,40 @@ const CoinPage = () => {
         },
       }
     }
-    
   })
 
   const { classes } = useStyles();
 
-  if (!coin) return <LinearProgress style={{backgroundColor: "gold"}} />
+  if (isFetching) return <LinearProgress style={{backgroundColor: "gold"}} />
   
   return (
     <div className={classes.container}>
       <div className={classes.sidebar}>
-        <img src={coin?.data.image.large} alt={coin?.data.name} height="200" style={{ marginBottom: 20}} />
+        <img src={coin?.image.large} alt={coin?.name} height="200" style={{ marginBottom: 20}} />
         <Typography variant="h3" className={classes.heading}>
-          {coin?.data.name}
+          {coin?.name}
         </Typography>
         
         <Typography variant="subtitle1" className={classes.description}>
-          <div dangerouslySetInnerHTML={{ __html: coin?.data.description.en.split(". ")[0] + "."}}/>
+          <div dangerouslySetInnerHTML={{ __html: coin?.description.en.split(". ")[0] + "."}}/>
         </Typography>
         
         <div className={classes.marketData}>
           <span style={{ display: "flex" }}> 
             <Typography variant="h5" style={{fontFamily: "Montserrat"}} >
-              Rank: {coin?.data.market_cap_rank}
+              Rank: {coin?.market_cap_rank}
             </Typography>
           </span>
 
           <span style={{ display: "flex" }}> 
             <Typography variant="h5" style={{fontFamily: "Montserrat"}} >
-            Current Price: {symbol}{" "}{numberWithCommas(coin?.data.market_data.current_price[currency.toLowerCase()])}
+            Current Price: {symbol}{" "}{coin ? numberWithCommas(coin.market_data.current_price[currency.toLowerCase()]) : ""}
             </Typography>
           </span>
 
           <span style={{ display: "flex" }}> 
             <Typography variant="h5" style={{fontFamily: "Montserrat"}} >
-            Market Cap: {symbol}{" "}{numberWithCommas(coin?.data.market_data.market_cap[currency.toLowerCase()].toString().slice(0, -6))}M
+            Market Cap: {symbol}{" "}{coin ? numberWithCommas(coin.market_data.market_cap[currency.toLowerCase()].toString().slice(0, -6)) + "M" : ""}
             </Typography>
           </span>
         </div>
@@ -120,7 +106,7 @@ const CoinPage = () => {
       </div>
 
       {/* chart */}
-      <CoinInfo coin={coin} />
+      <CoinInfo />
     </div>
   )
 }
