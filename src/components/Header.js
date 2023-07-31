@@ -9,7 +9,7 @@ const Header = () => {
         return {
             title: {
                 flex: 1,
-                color: "gold",
+                color: "#ffffff",
                 fontFamily: "Montserrat",
                 fontWeight: "bold",
                 cursor:"pointer"

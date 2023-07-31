@@ -20,15 +20,10 @@ const CoinsTable = () => {
             row: {
                 cursor: "pointer",
                 "&:hover": {
-                    backgroundColor: "#62656e"
+                    backgroundColor: "#040509"
                 },
                 fontFamily: "Montserrat"
-            }/*,
-            pagination: {
-                "& .MuiPaginationItem-root": {
-                    color: "gold"
-                }
-            }*/
+            }
         }
     })
 
@@ -71,14 +66,18 @@ const CoinsTable = () => {
                             isFetching ? (<CircularProgress />) 
                             : (
                             <Table>
-                                <TableHead style={{backgroundColor: "grey"}}>
+                                <TableHead style={{backgroundColor: "#0b0f1a"}}>
                                     <TableRow>
                                         {["Coin", "Price", "24h Change", "Market Cap"].map((head) => {
                                             return (
                                             <TableCell 
-                                            style={{color: "white", fontWeight: "700", fontFamily: "Montserrat"}}
-                                            key={head}
-                                            align={head === "Coin" ? "" : "right"}
+                                                style={{
+                                                    color: "white", 
+                                                    fontWeight: "700", 
+                                                    fontFamily: "Montserrat"
+                                                }}
+                                                key={head}
+                                                align={head === "Coin" ? "left" : "right"}
                                             >
                                                 {head}
                                             </TableCell>
@@ -95,25 +94,27 @@ const CoinsTable = () => {
 
                                             return (
                                                 <TableRow 
-                                                onClick={() => history(`/coins/${row.id}`)}
-                                                className={classes.row}
-                                                key={row.name}
+                                                    onClick={() => history(`/coins/${row.id}`)}
+                                                    className={classes.row}
+                                                    key={row.name}
                                                 >
                                                     <TableCell
-                                                    component="th"
-                                                    scope="row"
-                                                    style={{
-                                                        display: "flex",
-                                                        gap: 15
-                                                    }}>
-                                                        <img src={row?.image} alt={row.name} height="50" style={{marginBottom:10}} />
+                                                        component="th"
+                                                        scope="row"
+                                                        style={{
+                                                            display: "flex",
+                                                            gap: 15
+                                                        }}
+                                                    >
+                                                        <img src={row?.image} alt={row.name} height="50" style={{marginTop: 5, marginBottom: 5}} />
                                                         <div style={{
                                                             display: "flex",
-                                                            flexDirection: "column"
+                                                            flexDirection: "column",
+                                                            justifyContent: "center"
                                                         }}>
                                                             <span style={{
                                                                 textTransform: "uppercase",
-                                                                fontSize: 22,
+                                                                fontSize: 18,
                                                             }}>
                                                                 {row.symbol}
                                                             </span>
@@ -122,15 +123,15 @@ const CoinsTable = () => {
                                                     </TableCell>
 
                                                     <TableCell align="right">
-                                                        {symbol} {numberWithCommas(row.current_price.toFixed(2))}
+                                                        {symbol}{numberWithCommas(row.current_price.toFixed(2))}
                                                     </TableCell>
 
-                                                    <TableCell align="right" style={{ color: profit >= 0 ? "green" : "red", fontWeight: 500}}>
+                                                    <TableCell align="right" style={{ color: profit ? "#00a68c" : "#d9475a", fontWeight: 500}}>
                                                         {profit && "+"}{row.price_change_percentage_24h.toFixed(2)}%
                                                     </TableCell>
 
                                                     <TableCell align="right">
-                                                        {symbol} {numberWithCommas(row.market_cap.toString().slice(0, -6))}M
+                                                        {symbol}{numberWithCommas(row.market_cap.toString().slice(0, -6))}M
                                                     </TableCell>
                                                 </TableRow>
                                             )
@@ -146,7 +147,7 @@ const CoinsTable = () => {
                         width: "100%",
                         display: "flex",
                         justifyContent: "center"
-                    }} 
+                    }}
                     variant="outlined" 
                     count={(handleSearch()?.length/10).toFixed(0)} 
                     onChange={(_, value) => {
