@@ -5,7 +5,7 @@ import { makeStyles } from "tss-react/mui";
 import { Line } from "react-chartjs-2";
 import { CategoryScale, Chart, Filler, Legend, LineElement, LinearScale, PointElement, Title, Tooltip } from "chart.js";
 import { useParams } from "react-router-dom";
-import { chartDays } from "../config/data";
+import { chartDays } from "../utils/data";
 import SelectButtons from "./SelectButtons";
 import { useGetHistoricalChartQuery } from "../api/CryptoApi";
 

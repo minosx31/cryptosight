@@ -7,11 +7,9 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.12.3",
     "@reduxjs/toolkit": "^1.9.5",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",
+    "millify": "^6.1.0",
     "react": "^18.2.0",
     "react-alice-carousel": "^2.7.1",
     "react-chartjs-2": "^5.2.0",
@@ -19,7 +17,6 @@
     "react-redux": "^8.1.1",
     "react-router-dom": "^6.11.1",
     "react-scripts": "5.0.1",
-    "swiper": "^9.3.1",
     "tss-react": "^4.8.3"
   },
   "scripts": {

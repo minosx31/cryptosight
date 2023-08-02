@@ -4,11 +4,7 @@ import AliceCarousel from "react-alice-carousel";
 import { Link } from "react-router-dom";
 import { useGetMarketCapQuery } from "../api/CryptoApi";
 import { LinearProgress } from "@mui/material";
-
-// https://stackoverflow.com/questions/2901102/how-to-format-a-number-with-commas-as-thousands-separators
-export function numberWithCommas(x) {
-    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-}
+import { format } from "../utils/format";
 
 const Carousel = () => {
     const useStyles = makeStyles()( () => {
@@ -35,7 +31,7 @@ const Carousel = () => {
     
     const { classes } = useStyles();
 
-    const { currency, symbol } = CryptoState();
+    const { currency } = CryptoState();
 
     const responsive = {
         0: {
@@ -70,7 +66,7 @@ const Carousel = () => {
                 </span>
 
                 <span style={{fontSize: "20", fontWeight: 500}}>
-                    {symbol + numberWithCommas(coin?.current_price.toFixed(2))}
+                    ${format(coin?.current_price.toFixed(2))}
                 </span>
             </Link>
         )

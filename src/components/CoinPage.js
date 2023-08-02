@@ -3,8 +3,9 @@ import { CryptoState } from "../CryptoContext";
 import { LinearProgress, Typography} from "@mui/material";
 import CoinInfo from "./CoinInfo";
 import { makeStyles } from "tss-react/mui";
-import { numberWithCommas } from "./Carousel";
 import { useGetSingleCoinQuery } from "../api/CryptoApi";
+import millify from "millify";
+import { format } from "../utils/format";
 
 const CoinPage = () => {
   const { id } = useParams();
@@ -73,13 +74,13 @@ const CoinPage = () => {
 
           <span style={{ padding: 10, }}> 
             <Typography variant="h5" style={{fontFamily: "Montserrat"}} >
-            Current Price: ${coin ? numberWithCommas(coin.market_data.current_price[currency.toLowerCase()]) : ""}{" "}{currency}
+            Current Price: ${coin ? format(coin.market_data.current_price[currency.toLowerCase()]) : ""}{" "}{currency}
             </Typography>
           </span>
 
           <span style={{ padding: 10, }}> 
             <Typography variant="h5" style={{fontFamily: "Montserrat"}} >
-            Market Cap: ${coin ? numberWithCommas(coin.market_data.market_cap[currency.toLowerCase()].toString().slice(0, -6)) + "M" : ""}
+            Market Cap: ${millify(coin.market_data.market_cap[currency.toLowerCase()])}
             </Typography>
           </span>
         </div>

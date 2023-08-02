@@ -2,9 +2,10 @@ import { useState } from "react"
 import { CryptoState } from "../CryptoContext";
 import { CircularProgress, Container, Pagination, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, ThemeProvider, Typography, createTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { numberWithCommas } from "./Carousel";
 import { makeStyles } from "tss-react/mui";
 import { useGetCoinListQuery } from "../api/CryptoApi";
+import millify from "millify";
+import { format } from "../utils/format";
 
 const CoinsTable = () => {
     const useStyles = makeStyles()(()=> {
@@ -28,7 +29,7 @@ const CoinsTable = () => {
     });
 
     const [search, setSearch] = useState("");
-    const { currency, symbol } = CryptoState();
+    const { currency } = CryptoState();
     const [page, setPage] = useState(1)
     const history = useNavigate();
 
@@ -49,13 +50,13 @@ const CoinsTable = () => {
                     <TextField 
                         label="Search for a cryptocurrency" 
                         variant="outlined" 
-                        style={{ marginTop: 20, marginBottom: 20, width: "100%"}}
+                        style={{ width: "100%"}}
                         onChange={(e) => setSearch(e.target.value)} 
                     />
 
-                    <TableContainer>
+                    <TableContainer style={{ marginTop: "10px"}}>
                         {
-                            isFetching ? (<CircularProgress />) 
+                            isFetching ? (<CircularProgress style={{ margin: "20px" }} />) 
                             : (
                             <Table>
                                 <TableHead style={{backgroundColor: "#0b0f1a"}}>
@@ -115,7 +116,7 @@ const CoinsTable = () => {
                                                     </TableCell>
 
                                                     <TableCell align="right">
-                                                        {symbol}{numberWithCommas(row.current_price.toFixed(2))}
+                                                        ${format(row.current_price.toFixed(2))}
                                                     </TableCell>
 
                                                     <TableCell align="right" style={{ color: profit ? "#00a68c" : "#d9475a", fontWeight: 500}}>
@@ -123,7 +124,7 @@ const CoinsTable = () => {
                                                     </TableCell>
 
                                                     <TableCell align="right">
-                                                        {symbol}{numberWithCommas(row.market_cap.toString().slice(0, -6))}M
+                                                        ${millify(row.market_cap, {space:true})}
                                                     </TableCell>
                                                 </TableRow>
                                             )
