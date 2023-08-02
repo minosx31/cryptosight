@@ -13,9 +13,9 @@ const CoinInfo = () => {
   const { id } = useParams();
   const [days, setDays] = useState(1);
   const { currency } = CryptoState();
-
-  console.log(currency)
-  const { data: historicalChart, isFetching } = useGetHistoricalChartQuery(id, currency, days)
+  const { data: historicalChart, isFetching } = useGetHistoricalChartQuery({
+    id, currency, days
+  })
 
   const darkTheme = createTheme({
     palette: {
@@ -26,7 +26,7 @@ const CoinInfo = () => {
 const useStyles = makeStyles()((theme)=> {
   return {
     container: {
-      width: "75%",
+      width: "90%",
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -56,40 +56,68 @@ Chart.register(
   Legend
 )
 
-  if (isFetching) return <LinearProgress style={{backgroundColor: "gold"}} />
+  if (isFetching) return <LinearProgress style={{backgroundColor: "#d4d6d9"}} />
 
   return (
     <ThemeProvider theme={darkTheme}>
       <div className={classes.container}>
         {
           !historicalChart ? (
-            <CircularProgress style={{ color: "gold" }} size={250} thickness={1} />
+            <CircularProgress style={{ color: "#d4d6d9" }} size={250} thickness={1} />
           ) : (
           <>
-            <Line data={{
-              labels: historicalChart.prices.map((coin) => {
-                let date = new Date(coin[0]);
-                let time = 
-                date.getHours() > 12 
-                ? `${date.getHours()-12}:${date.getMinutes()} PM` 
-                : `${date.getHours()}:${date.getMinutes()} AM`;
-                
-                return days === 1 ? time : date.toLocaleDateString();
-              }),
+            <Line 
+              data={{
+                labels: historicalChart.prices.map((coin) => {
+                  let date = new Date(coin[0]);
+                  let time = date.getHours() > 12 
+                    ? `${date.getHours()-12}:${date.getMinutes()} PM` 
+                    : `${date.getHours()}:${date.getMinutes()} AM`;
+                  
+                  return days === 1 ? time : date.toLocaleDateString();
+                }),
 
-              datasets: [{
-                data:historicalChart.prices.map((coin) => coin[1]),
-                label: `Price ( Past ${days} Days ) in ${currency}`,
-                borderColor: "teal"
-              }],
-            }} 
-            options={{
-              elements: {
-                point: {
-                  radius: 1
-                }
-              }
-            }}
+                datasets: [{
+                  data: historicalChart.prices.map((coin) => coin[1]),
+                  label: `Price ( Past ${days} Days ) in ${currency}`,
+                  fill: {
+                    target: "origin",
+                    above: "rgba(93, 149, 179, 0.1)",
+                  }
+                }],
+              }} 
+              options={{
+                elements: {
+                  point: {
+                    radius: "0",
+                  },
+                  line: {
+                    borderColor: "#5d95b3",
+                    borderWidth: 1.5,
+                  }
+                },
+                scales: {
+                  y: {
+                    grid: {
+                      color: "rgb(235,238,241,0.2)",
+                    }
+                  },
+                  x: {
+                    grid: {
+                      display: false,
+                    }
+                  }
+                },
+                plugins: {
+                  legend: {
+                    onClick: null,
+                  },
+                  decimation: {
+                    enabled: true,
+                  }
+                },
+                spanGaps: true,
+              }}
             />
           
             <div style={{

@@ -16,7 +16,10 @@ export const CryptoApi = createApi({
             query: (currency) => `/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h`
         }),
         getHistoricalChart: builder.query({
-            query: (id, currency='USD', days=365) => `/coins/${id}/market_chart?vs_currency=${currency}&days=${days}`
+            query: ({id, currency, days}) => `/coins/${id}/market_chart?vs_currency=${currency}&days=${days}`
+        }),
+        getTrending: builder.query({
+            query: () => `/search/trending`
         })
     })
 })
@@ -25,5 +28,6 @@ export const {
     useGetCoinListQuery,
     useGetSingleCoinQuery,
     useGetMarketCapQuery,
-    useGetHistoricalChartQuery
+    useGetHistoricalChartQuery,
+    useGetTrendingQuery,
 } = CryptoApi

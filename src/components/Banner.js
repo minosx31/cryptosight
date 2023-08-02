@@ -2,7 +2,6 @@ import { Container, Typography } from "@mui/material";
 import { makeStyles } from "tss-react/mui"
 import Carousel from "./Carousel";
 
-
 const Banner = () => {
     const useStyles = makeStyles()( () => {
         return {
@@ -10,12 +9,10 @@ const Banner = () => {
                 height: 400,
                 display: "flex",
                 flexDirection: "column",
-                paddingTop: 25,
-                justifyContent: "space-around"
+                justifyContent: "space-evenly"
             },
             tagline: {
                 display: "flex",
-                height: "40%",
                 flexDirection: "column",
                 justifyContent: "center",
                 textAlign: "center"
@@ -30,27 +27,19 @@ const Banner = () => {
         <Container className={classes.bannerContent}> 
             <div className={classes.tagline}>
                 <Typography
-                    variant="h2"
+                    m={0}
+                    variant="h4"
                     style={{
-                        fontWeight: "bold",
-                        marginBottom: 15,
-                        fontFamily: "Montserrat"
-                    }}
-                >
-                    CryptoSight
-                </Typography>
-
-                <Typography 
-                    variant="subtitle2"
-                    style={{
+                        margin: "0",
                         color: "darkgrey",
                         textTransform: "capitalize",
-                        fontFamily: "Montserrat"
+                        fontFamily: "Montserrat",
                     }}
                 >
-                    Get updated information on your favorite crypto here!
+                    Check the prices of your favorite crypto here!
                 </Typography>
             </div>
+
             <Carousel />
         </Container>
     </div>

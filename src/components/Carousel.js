@@ -14,9 +14,9 @@ const Carousel = () => {
     const useStyles = makeStyles()( () => {
         return {
             carousel: {
-                height: "50%",
+                height: "40%",
                 display: "flex",
-                alignItems: "center"
+                alignItems: "center",
             }, 
             carouselItem: {
                 display:"flex",
@@ -24,7 +24,11 @@ const Carousel = () => {
                 alignItems:"center",
                 cursor:"pointer",
                 textTransform: "uppercase",
-                color: "white"
+                color: "white",
+                margin: "15px",
+                paddingBottom: "10px",
+                backgroundColor: "#2a3040",
+                borderRadius: "15px",
             }
         };
     })
@@ -42,9 +46,9 @@ const Carousel = () => {
         }
     };
 
-    const { data: marketCap, isFetching } = useGetMarketCapQuery(currency)
+    const { data: marketCap, isFetching: isFetchingMarketCap } = useGetMarketCapQuery(currency)
 
-    if (isFetching) return <LinearProgress style={{backgroundColor: "gold"}} />
+    if (isFetchingMarketCap) return <LinearProgress style={{backgroundColor: "#d4d6d9"}} />
 
     const items = marketCap.map((coin) => {
         let profit = coin.price_change_percentage_24h >= 0;
@@ -75,15 +79,15 @@ const Carousel = () => {
   return (
     <div className={classes.carousel}>
         <AliceCarousel 
-        mouseTracking 
-        infinite
-        autoPlayInterval={1500}
-        animationDuration={1500}
-        disableDotsControls
-        disableButtonsControls
-        responsive={responsive}
-        items={items}
-        autoPlay
+            mouseTracking
+            touchTracking
+            infinite
+            autoPlayInterval={1500}
+            animationDuration={1000}
+            disableDotsControls
+            responsive={responsive}
+            items={items}
+            autoPlay
         />
     </div>
   )

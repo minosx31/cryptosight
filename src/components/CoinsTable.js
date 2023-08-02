@@ -7,16 +7,8 @@ import { makeStyles } from "tss-react/mui";
 import { useGetCoinListQuery } from "../api/CryptoApi";
 
 const CoinsTable = () => {
-
     const useStyles = makeStyles()(()=> {
         return {
-            title: {
-                flex: 1,
-                color: "gold",
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-                cursor:"pointer"
-            },
             row: {
                 cursor: "pointer",
                 "&:hover": {
@@ -55,10 +47,10 @@ const CoinsTable = () => {
                 Cryptocurrency Prices by Market Cap
             </Typography>
                     <TextField 
-                    label="Search for a cryptocurrency" 
-                    variant="outlined" 
-                    style={{ marginTop: 20, marginBottom: 20, width: "100%"}}
-                    onChange={(e) => setSearch(e.target.value)} 
+                        label="Search for a cryptocurrency" 
+                        variant="outlined" 
+                        style={{ marginTop: 20, marginBottom: 20, width: "100%"}}
+                        onChange={(e) => setSearch(e.target.value)} 
                     />
 
                     <TableContainer>
@@ -142,18 +134,20 @@ const CoinsTable = () => {
                         }
                     </TableContainer>
 
-                    <Pagination style={{
-                        padding: 20,
-                        width: "100%",
-                        display: "flex",
-                        justifyContent: "center"
-                    }}
-                    variant="outlined" 
-                    count={(handleSearch()?.length/10).toFixed(0)} 
-                    onChange={(_, value) => {
-                        setPage(value)
-                        window.scroll( {top: 0, left: 0, behavior: "smooth"})
-                    }}
+                    <Pagination 
+                        style={{
+                            padding: 20,
+                            width: "100%",
+                            display: "flex",
+                            justifyContent: "center"
+                        }}
+                        variant="outlined"
+                        shape="rounded"
+                        count={Number((handleSearch()?.length/10).toFixed(0))} 
+                        onChange={(_, value) => {
+                            setPage(value)
+                            window.scroll( {top: 0, left: 0, behavior: "smooth"})
+                        }}
                     />
         </Container>
     </ThemeProvider>
